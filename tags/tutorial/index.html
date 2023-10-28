@@ -179,7 +179,7 @@
   <nav class="flex-column flex-grow-1 w-100 ps-0">
     <ul class="nav">
       <!-- home -->
-      <li class="nav-item active">
+      <li class="nav-item">
         <a href="/" class="nav-link">
           <i class="fa-fw fas fa-home"></i>
           <span>Home</span>
@@ -239,15 +239,8 @@
     id="topbar"
     class="d-flex align-items-center justify-content-between px-lg-3 h-100"
   >
-    <nav id="breadcrumb" aria-label="Breadcrumb">
-      
-
-      
-        <!-- index page -->
-        <span>Home</span>
-
-      
-    </nav>
+  <nav id="breadcrumb" aria-label="Breadcrumb">     
+    <span><a href="/">Home</a></span><span><a href="/tags">Tags</a></span><span>Tutorial</span></nav>
     <!-- endof #breadcrumb -->
 
     <button type="button" id="sidebar-trigger" class="btn btn-link">
@@ -255,7 +248,7 @@
     </button>
 
     <div id="topbar-title">
-      Celeron Hackintosh Guide
+      Tags
     </div>
 
     <button type="button" id="search-trigger" class="btn btn-link">
@@ -280,148 +273,34 @@
 
         <div class="row flex-grow-1">
           <main aria-label="Main Content" class="col-12 col-lg-11 col-xl-9 px-md-4">
-<div id="post-list" class="flex-grow-1 px-xl-1">
-  
-    <article class="card-wrapper card">
-      <a href="/parts/getting-started/" class="post-preview row g-0 flex-md-row-reverse">
-        <div class="col-md-12">
-          <div class="card-body d-flex flex-column">
-            <h1 class="card-title my-2 mt-md-0">Getting Started</h1>
-
-            <div class="card-text content mt-0 mb-3">
-              <p>
-                Prerequisites and creating the installer
-              </p>
-            </div>
-
-            <div class="post-meta flex-grow-1 d-flex align-items-end">
-              <div class="me-auto">
-                <i class="far fa-calendar fa-fw me-1"></i>
-                <time data-ts="1565355300" data-df="ll">Last Updated Oct 27, 2023</time>
-                <i class="far fa-folder-open fa-fw me-1"></i>
-                <span class="categories">    
-                      Start Here,
-                      Tutorial
-                  </span>
-              </div>
-                <div class="pin ms-1">
-                  <i class="fas fa-thumbtack fa-fw"></i>
-                  <span></span>
-              </div>
+            
               
-            </div>
-            <!-- .post-meta -->
-          </div>
-          <!-- .card-body -->
-        </div>
-      </a>
-    </article>
+
+
+
+<article class="px-1">
+    <div id="page-tag">
+        <h1 class="ps-lg-2">
+          <i class="fa fa-tag fa-fw text-muted"></i>
+          Tutorial 
+          <span class="lead text-muted ps-2">2</span>
+        </h1>
+        <ul class="content ps-0">
+          
+            <li class="d-flex justify-content-between px-md-3">
+              <a href="/parts/getting-started/">Getting Started</a>
+    <span class="dash flex-grow-1"></span>
+      <time class="text-muted small text-nowrap" data-ts="1565355300" data-df="ll">Last Modified Oct 27, 2023</time></li>   
+      <li class="d-flex justify-content-between px-md-3">
+        <a href="/parts/config-setup/">Setting up your config.plist</a>
+<span class="dash flex-grow-1"></span>
+<time class="text-muted small text-nowrap" data-ts="1565355300" data-df="ll">Last Modified Oct 28, 2023</time></li>   
+      </ul>
+      </div>
   
-    <article class="card-wrapper card">
-      <a href="/parts/gathering-files/" class="post-preview row g-0 flex-md-row-reverse">
-          <!-- <div class="col-md-5">
-            <div class="preview-img  blur"><img data-src="https://chirpy-img.netlify.app/commons/devices-mockup.png" alt="Responsive rendering of Chirpy theme on multiple devices." data-lqip="true" src="data:image/webp;base64,UklGRpoAAABXRUJQVlA4WAoAAAAQAAAADwAABwAAQUxQSDIAAAARL0AmbZurmr57yyIiqE8oiG0bejIYEQTgqiDA9vqnsUSI6H+oAERp2HZ65qP/VIAWAFZQOCBCAAAA8AEAnQEqEAAIAAVAfCWkAALp8sF8rgRgAP7o9FDvMCkMde9PK7euH5M1m6VWoDXf2FkP3BqV0ZYbO6NA/VFIAAAA"></div>
-          </div> -->
-        <div class="col-md-12">
-          <div class="card-body d-flex flex-column">
-            <h1 class="card-title my-2 mt-md-0">Gathering Files</h1>
+</article>
 
-            <div class="card-text content mt-0 mb-3">
-              <p>
-                List of Drivers and Kexts you'll need for your hack
-              </p>
-            </div>
-
-            <div class="post-meta flex-grow-1 d-flex align-items-end">
-              <div class="me-auto">
-                <i class="far fa-calendar fa-fw me-1"></i>
-                <time data-ts="1565355300" data-df="ll">Last Updated Oct 28, 2023</time>
-                <i class="far fa-folder-open fa-fw me-1"></i>
-                <span class="categories">
-                  Important, Resources
-                </span>
-              </div>
-            </div>
-            <!-- .post-meta -->
-          </div>
-          <!-- .card-body -->
-        </div>
-      </a>
-    </article>
-  
-    <article class="card-wrapper card">
-      <a href="/parts/config-setup/" class="post-preview row g-0 flex-md-row-reverse">
-        
-
-        
-
-        <div class="col-md-12">
-          <div class="card-body d-flex flex-column">
-            <h1 class="card-title my-2 mt-md-0">Setting up your config.plist</h1>
-
-            <div class="card-text content mt-0 mb-3">
-              <p>
-                Config.plist setup for celeron hackintoshs
-              </p>
-            </div>
-
-            <div class="post-meta flex-grow-1 d-flex align-items-end">
-              <div class="me-auto">
-                <i class="far fa-calendar fa-fw me-1"></i>
-                <time data-ts="1565355300" data-df="ll">Last Updated Oct 28, 2023</time>
-                <i class="far fa-folder-open fa-fw me-1"></i>
-                <span class="categories">    
-                      Important,
-                      Tutorial
-                </span>
-              </div>
-
-              
-            </div>
-            <!-- .post-meta -->
-          </div>
-          <!-- .card-body -->
-        </div>
-      </a>
-    </article>
-  
-    <article class="card-wrapper card">
-      <a href="/parts/troubleshooting/" class="post-preview row g-0 flex-md-row-reverse">
-        
-
-        
-
-        <div class="col-md-12">
-          <div class="card-body d-flex flex-column">
-            <h1 class="card-title my-2 mt-md-0">Troubleshooting</h1>
-
-            <div class="card-text content mt-0 mb-3">
-              <p>
-                Troubleshooting for your unsupported hack
-              </p>
-            </div>
-
-            <div class="post-meta flex-grow-1 d-flex align-items-end">
-              <div class="me-auto">
-                <i class="far fa-calendar fa-fw me-1"></i>
-                <time data-ts="1565355300" data-df="ll">Last Updated Oct 28, 2023</time>
-                <i class="far fa-folder-open fa-fw me-1"></i>
-                <span class="categories">    
-                      Important,
-                      Help
-                </span>
-              </div>
-
-              
-            </div>
-            <!-- .post-meta -->
-          </div>
-          <!-- .card-body -->
-        </div>
-      </a>
-    </article>
-  
-</div>
+            
           </main>
 
           <!-- panel -->
@@ -470,7 +349,7 @@
   <p>
     ©
     <time>2023</time>
-    <a href="https://twitter.com/lrdsnow101">Lrdsnow</a>.
+    <a href="https://twitter.com/Lrdsnow101">Lrdsnow</a>.
     
       <span
         data-bs-toggle="tooltip"
@@ -553,8 +432,82 @@
     </button>
   </div>
 </aside>
-  <script src="https://cdn.jsdelivr.net/combine/npm/jquery@3.7.1/dist/jquery.min.js,npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js,npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js,npm/loading-attribute-polyfill@2.1.1/dist/loading-attribute-polyfill.umd.min.js,npm/dayjs@1.11.10/dayjs.min.js,npm/dayjs@1.11.10/locale/en.min.js,npm/dayjs@1.11.10/plugin/relativeTime.min.js,npm/dayjs@1.11.10/plugin/localizedFormat.min.js"></script>
-<script defer src="/assets/js/dist/home.min.js"></script>
+
+    
+
+    <!-- JavaScripts -->
+
+    <!-- JS selector for site. -->
+
+<!-- commons -->
+
+
+
+<!-- layout specified -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+  
+    
+
+    
+
+  
+
+
+
+  <script src="https://cdn.jsdelivr.net/combine/npm/jquery@3.7.1/dist/jquery.min.js,npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js,npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js"></script>
+
+
+
+
+
+
+<script defer src="/assets/js/dist/commons.min.js"></script>
+
+
+
+
+
+
+    
+
+    <!--
+  Jekyll Simple Search loader
+  See: <https://github.com/christian-fei/Simple-Jekyll-Search>
+-->
+
+
+
+
+
 <script>
   /* Note: dependent library will be loaded in `js-selector.html` */
   SimpleJekyllSearch({
