@@ -1,0 +1,1188 @@
+<!doctype html>
+<html lang="en" >
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f7f7">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1b1e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, user-scalable=no initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
+  <title>Celeron Hackintosh Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" >
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" >
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com" >
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" >
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" >
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" >
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="/assets/css/jekyll-theme-chirpy.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/loading-attribute-polyfill@2.1.1/dist/loading-attribute-polyfill.min.css">
+  <link rel="icon" href="/assets/img/favicons/main.png" type="image/x-icon">
+<script type="text/javascript">
+  class ModeToggle {
+    static get MODE_KEY() {
+      return 'mode';
+    }
+    static get MODE_ATTR() {
+      return 'data-mode';
+    }
+    static get DARK_MODE() {
+      return 'dark';
+    }
+    static get LIGHT_MODE() {
+      return 'light';
+    }
+    static get ID() {
+      return 'mode-toggle';
+    }
+
+    constructor() {
+      if (this.hasMode) {
+        if (this.isDarkMode) {
+          if (!this.isSysDarkPrefer) {
+            this.setDark();
+          }
+        } else {
+          if (this.isSysDarkPrefer) {
+            this.setLight();
+          }
+        }
+      }
+
+      let self = this;
+
+      /* always follow the system prefers */
+      this.sysDarkPrefers.addEventListener('change', () => {
+        if (self.hasMode) {
+          if (self.isDarkMode) {
+            if (!self.isSysDarkPrefer) {
+              self.setDark();
+            }
+          } else {
+            if (self.isSysDarkPrefer) {
+              self.setLight();
+            }
+          }
+
+          self.clearMode();
+        }
+
+        self.notify();
+      });
+    } /* constructor() */
+
+    get sysDarkPrefers() {
+      return window.matchMedia('(prefers-color-scheme: dark)');
+    }
+
+    get isSysDarkPrefer() {
+      return this.sysDarkPrefers.matches;
+    }
+
+    get isDarkMode() {
+      return this.mode === ModeToggle.DARK_MODE;
+    }
+
+    get isLightMode() {
+      return this.mode === ModeToggle.LIGHT_MODE;
+    }
+
+    get hasMode() {
+      return this.mode != null;
+    }
+
+    get mode() {
+      return sessionStorage.getItem(ModeToggle.MODE_KEY);
+    }
+
+    /* get the current mode on screen */
+    get modeStatus() {
+      if (this.isDarkMode || (!this.hasMode && this.isSysDarkPrefer)) {
+        return ModeToggle.DARK_MODE;
+      } else {
+        return ModeToggle.LIGHT_MODE;
+      }
+    }
+
+    setDark() {
+      document.documentElement.setAttribute(ModeToggle.MODE_ATTR, ModeToggle.DARK_MODE);
+      sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.DARK_MODE);
+    }
+
+    setLight() {
+      document.documentElement.setAttribute(ModeToggle.MODE_ATTR, ModeToggle.LIGHT_MODE);
+      sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.LIGHT_MODE);
+    }
+
+    clearMode() {
+      document.documentElement.removeAttribute(ModeToggle.MODE_ATTR);
+      sessionStorage.removeItem(ModeToggle.MODE_KEY);
+    }
+
+    /* Notify another plugins that the theme mode has changed */
+    notify() {
+      window.postMessage(
+        {
+          direction: ModeToggle.ID,
+          message: this.modeStatus
+        },
+        '*'
+      );
+    }
+
+    flipMode() {
+      if (this.hasMode) {
+        if (this.isSysDarkPrefer) {
+          if (this.isLightMode) {
+            this.clearMode();
+          } else {
+            this.setLight();
+          }
+        } else {
+          if (this.isDarkMode) {
+            this.clearMode();
+          } else {
+            this.setDark();
+          }
+        }
+      } else {
+        if (this.isSysDarkPrefer) {
+          this.setLight();
+        } else {
+          this.setDark();
+        }
+      }
+
+      this.notify();
+    } /* flipMode() */
+  } /* ModeToggle */
+
+  const modeToggle = new ModeToggle();
+</script>
+</head>
+  <body>
+<aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
+  <header class="profile-wrapper">
+    <a href="/" id="avatar" class="rounded-circle">
+        <img src="/assets/img/favicons/main.png" width="112" height="112" alt="avatar" onerror="this.style.display='none'">
+    </a>
+    <h1 class="site-title">
+      <a href="/">Celeron Hackintosh Guide</a>
+    </h1>
+    <p class="site-subtitle fst-italic mb-0">A detailed guide on installing macos on unsupported devices</p>
+  </header>
+  <!-- .profile-wrapper -->
+  <nav class="flex-column flex-grow-1 w-100 ps-0">
+    <ul class="nav">
+      <!-- home -->
+      <li class="nav-item">
+        <a href="/" class="nav-link">
+          <i class="fa-fw fas fa-home"></i>
+          <span>Home</span>
+        </a>
+      </li>
+      <!-- the real tabs -->
+        <li class="nav-item">
+          <a href="/parts/getting-started/" class="nav-link">
+            <i class="fa-fw fas fa-tag"></i>
+            <span>Getting Started</span>
+          </a>
+        </li>
+        <!-- .nav-item -->
+        <li class="nav-item active">
+          <a href="/parts/gathering-files/" class="nav-link">
+            <i class="fa-fw fas fa-stream"></i>
+            <span>Gathering Files</span>
+          </a>
+        </li>
+        <!-- .nav-item -->
+        <li class="nav-item">
+          <a href="/parts/config-setup/" class="nav-link">
+            <i class="fa-fw fas fa-stream"></i>
+            <span>config.plist Setup</span>
+          </a>
+        </li>
+        <!-- .nav-item -->
+        <li class="nav-item">
+          <a href="/parts/troubleshooting/" class="nav-link">
+            <i class="fa-fw fas fa-info-circle"></i>
+            <span>Troubleshooting</span>
+          </a>
+        </li>
+        <!-- .nav-item -->
+    </ul>
+  </nav>
+  <div class="sidebar-bottom d-flex flex-wrap  align-items-center w-100">
+      <button type="button" class="mode-toggle btn" aria-label="Switch Mode">
+        <i class="fas fa-adjust"></i>
+      </button>
+        <span class="icon-border"></span>
+        <a href="https://github.com/lrdsnow" aria-label="github" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i></a>
+        <a href="https://twitter.com/Lrdsnow101" aria-label="twitter" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://discord.gg/purekfd" aria-label="discord" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-discord"></i></a>
+  </div>
+  <!-- .sidebar-bottom -->
+</aside>
+<!-- #sidebar -->
+
+    <div id="main-wrapper" class="d-flex justify-content-center">
+      <div class="container d-flex flex-column px-xxl-5">
+        <!-- The Top Bar -->
+
+<header id="topbar-wrapper" aria-label="Top Bar">
+  <div
+    id="topbar"
+    class="d-flex align-items-center justify-content-between px-lg-3 h-100"
+  >
+    <nav id="breadcrumb" aria-label="Breadcrumb"><span><a href="/">Home</a></span><span>Gathering Files</span></nav>
+    <!-- endof #breadcrumb -->
+
+    <button type="button" id="sidebar-trigger" class="btn btn-link">
+      <i class="fas fa-bars fa-fw"></i>
+    </button>
+
+    <div id="topbar-title">
+      Part
+    </div>
+
+    <button type="button" id="search-trigger" class="btn btn-link">
+      <i class="fas fa-search fa-fw"></i>
+    </button>
+
+    <search class="align-items-center ms-3 ms-lg-0">
+      <i class="fas fa-search fa-fw"></i>
+      <input
+        class="form-control"
+        id="search-input"
+        type="search"
+        aria-label="search"
+        autocomplete="off"
+        placeholder="Search..."
+      >
+    </search>
+    <button type="button" class="btn btn-link text-decoration-none" id="search-cancel">Cancel</button>
+  </div>
+</header>
+
+
+        <div class="row flex-grow-1">
+          <main aria-label="Main Content" class="col-12 col-lg-11 col-xl-9 px-md-4">
+            
+<article class="px-1">
+  <header>
+    <h1 data-toc-skip>Gathering Files</h1>
+
+    <div class="post-meta text-muted">
+      <!-- published date -->
+      <span>
+        Last Updated
+        <time data-ts="1565355300" data-df="ll">Oct 28, 2023</time>
+      </span>
+
+      <!-- lastmod date -->
+      
+
+      
+
+      <div class="d-flex justify-content-between">
+      <!-- .d-flex -->
+    </div>
+    <!-- .post-meta -->
+  </header>
+
+  <div class="content">
+    <h2 id="generate-the-favicon"><span class="me-2">Drivers</span><a href="#generate-the-favicon" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2>
+    <blockquote class="prompt-info">
+      <p>Required Drivers</p>
+      <ul class="">
+        <li>
+          <a href="https://github.com/acidanthera/OcBinaryData/blob/master/Drivers/HfsPlusLegacy.efi">HfsPlusLegacy.efi</a>
+          <ul class="">
+            <li>Needed for our low end systems due to the lack of RDRAND instruction support</li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="">
+        <li>
+          <a>OpenRuntime.efi</a>
+          <ul class="">
+            <li>You should have this already from OpenCorePkg</li>
+          </ul>
+        </li>
+      </ul>
+    </blockquote>
+    <h2 id="generate-the-favicon"><span class="me-2">Kexts</span><a href="#generate-the-favicon" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2>
+    <blockquote class="prompt-info">
+      <p>Required Kexts</p>
+      <ul class="">
+        <li>
+          <a href="https://github.com/acidanthera/Lilu/releases">Lilu.kext</a>
+          <ul class="">
+            <li>A kext almost every other kext depends on</li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="">
+        <li>
+          <a href="https://github.com/acidanthera/VirtualSMC/releases">VirtualSMC.kext</a>
+          <ul class="">
+            <li>Emulates the SMC chip in real macs</li>
+            <li>Due to the nature of our unsupported devices you wont need any of the plugins other then <a>SMCBatteryManager.kext</a> if your on a laptop</li>
+          </ul>
+        </li>
+      </ul>
+    </blockquote>
+    <h4>Graphics</h4>
+    <ul class="">
+      <li>
+        <a href="https://github.com/acidanthera/WhateverGreen/releases">WhateverGreen.kext</a>
+        <ul class="">
+          <li>Used for graphics patching</li>
+          <li>Due to the nature of our unsupported devices you probably don't need this if your using an iGPU</li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="">
+      <li>
+        <a href="https://github.com/ChefKissInc/NootedBlue/actions">NootedBlue.kext</a>
+        <ul class="">
+          <li>A project to support unsupported iGPUs</li>
+          <li>Only supports Haswell iGPUs on 10.14 and 10.13 for now</li>
+        </ul>
+      </li>
+    </ul>
+    <h4>Audio</h4>
+      <ul class="">
+        <li>
+          <a href="https://github.com/acidanthera/AppleALC/releases">AppleALC.kext</a>
+          <ul class="">
+            <li>Patches AppleHDA</li>
+            <li>Chromebooks don't have supported audio so there is no need for this on them</li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="">
+        <li>
+          <a href="https://sourceforge.net/projects/voodoohda/">VoodooHDA.kext</a>
+          <ul class="">
+            <li>Patches AppleHDA</li>
+            <li>Isn't recommended on macOS 11.3+ due to the requirement of modifying the macOS filesystem</li>
+            <li>Chromebooks don't have supported audio so there is no need for this on them</li>
+          </ul>
+        </li>
+      </ul>
+    <h4>Internet</h4>
+    <h5>Intel WiFi</h5>
+    <ul class="">
+      <li>
+        <a href="https://github.com/OpenIntelWireless/itlwm/releases">AirportItlwm.kext</a>
+        <ul class="">
+          <li>Adds native wifi support for intel wifi cards</li>
+          <li>Requires macOS 10.13 or newer and requires Apple's Secure Boot to function correctly</li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="">
+      <li>
+        <a href="https://github.com/OpenIntelWireless/itlwm/releases">Itlwm.kext</a>
+        <ul class="">
+          <li>Adds wifi support for intel wifi cards via <a href="https://github.com/OpenIntelWireless/HeliPort/releases">Heliport</a></li>
+          <li>Requires macOS 10.12 or newer</li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="">
+      <li>
+        <a href="https://github.com/OpenIntelWireless/IntelBluetoothFirmware/releases">IntelBluetoohFirmware.kext</a>
+        <ul class="">
+          <li>Adds bluetooth support for intel wifi cards via <a href="https://github.com/OpenIntelWireless/HeliPort/releases">Heliport</a></li>
+          <li>Requires macOS 10.13 or newer</li>
+          <li>On macOS 10.13-11 you will also need <a>IntelBluetoothInjector.kext</a> (included)</li>
+        </ul>
+      </li>
+    </ul>
+    <h5>Broadcom WiFi</h5>
+    <ul class="">
+      <li>
+        <a href="https://github.com/acidanthera/AirportBrcmFixup/releases">AirportBrcmFixup.kext</a>
+        <ul class="">
+          <li>Used for patching non-Apple/non-Fenvi Broadcom cards</li>
+          <li>Requires OS X 10.10 or newer</li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="">
+      <li>
+        <a href="https://github.com/acidanthera/AirportBrcmFixup/releases">BrcmPatchRAM.kext</a>
+        <ul class="">
+          <li>Used for uploading firmware on Broadcom Bluetooth chipset, required for all non-Apple/non-Fenvi Airport cards</li>
+          <li>To be paired with BrcmFirmwareData.kext</li>
+          <ul class="">
+            <li>BrcmPatchRAM3 for 10.15+</li>
+            <li>BrcmPatchRAM2 for 10.11-10.14</li>
+            <li>BrcmPatchRAM for 10.8-10.10</li>
+          </ul>
+          <li>On macOS 10.11 through macOS 11, you also need <a>BrcmBluetoothInjector.kext</a> (included)</li>
+        </ul>
+      </li>
+    </ul>
+    <h5>Ethernet</h5>
+    <ul class="">
+      <li>
+        <a href="https://github.com/acidanthera/IntelMausi/releases">IntelMausi.kext</a>
+        <ul class="">
+          <li>Required for the majority of Intel NICs</li>
+          <li>Intel's 82578, 82579, I217, I218 and I219 NICs are officially supported</li>
+          <li>Requires OS X 10.9 or newer, 10.6-10.8 users can use <a>IntelSnowMausi.kext</a> instead for older OSes</li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="">
+      <li>
+        <a href="https://github.com/Mieze/AtherosE2200Ethernet/releases">AtherosE2200Ethernet.kext</a>
+        <ul class="">
+          <li>Required for Atheros and Killer NICs</li>
+          <li>Requires OS X 10.8 or newer</li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="">
+      <li>
+        <a href="https://github.com/Mieze/RTL8111_driver_for_OS_X/releases">RealtekRTL8111.kext</a>
+        <ul class="">
+          <li>For Realtek's Gigabit Ethernet</li>
+          <li>NOTE: Sometimes the latest version of the kext might not work properly with your Ethernet. If you see this issue, try older versions.</li>
+          <li>Requires OS X 10.8 and up for versions v2.2.0 and below, macOS 10.12 and up for version v2.2.2, macOS 10.14 and up for versions v2.3.0 and up</li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="">
+      <li>
+        <a href="https://www.insanelymac.com/forum/files/file/1004-lucyrtl8125ethernet/">LucyRTL8125Ethernet.kext</a>
+        <ul class="">
+          <li>For Realtek's 2.5Gb Ethernet</li>
+          <li>Requires macOS 10.15 or newer</li>
+        </ul>
+      </li>
+    </ul>
+    <h4>USB</h4>
+    <ul class="">
+      <li>
+        <p><a href="https://github.com/USBToolBox/kext">USBToolBox.kext</a> and <a href="https://github.com/USBToolBox/tool">USBToolBox/tool</a></p>
+        <ul class="">
+          <li>USB mapping tool for Windows and macOS</li>
+          <li>This is highly recommended</li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="">
+      <li>
+        <a href="https://bitbucket.org/RehabMan/os-x-usb-inject-all/downloads/">USBInjectAll.kext</a>
+        <ul class="">
+          <li>Maps USBs</li>
+          <li>This is not recommended</li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="">
+      <li>
+        <a href="https://github.com/RehabMan/OS-X-USB-Inject-All/tree/master/XHCI-unsupported.kext">XHCI-unsupported.kext</a>
+        <ul class="">
+          <li>Needed for some non-native USB controllers</li>
+          <li>Common chipsets needing this:</li>
+          <ul class="">
+            <li>H370</li>
+            <li>B360</li>
+            <li>H310</li>
+            <li>Z390 (not needed on 10.14 and newer)</li>
+            <li>X79</li>
+            <li>X99</li>
+            <li>ASRock Intel boards (B460/Z490+ boards do not need it however)</li>
+          </ul>
+        </ul>
+      </li>
+    </ul>
+    <h4>Extras</h4>
+    <ul class="">
+      <li>
+        <a href="https://github.com/acidanthera/NVMeFix/releases">NVMeFix.kext</a>
+        <ul class="">
+          <li>Used for fixing power management and initialization on non-Apple NVMe</li>
+          <li>Requires macOS 10.14 or newer</li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="">
+      <li>
+        <a href="https://github.com/khronokernel/Legacy-Kexts/blob/master/Injectors/Zip/SATA-unsupported.kext.zip">SATA-Unsupported.kext</a>
+        <ul class="">
+          <li>Adds support for a large variety of SATA controllers, mainly relevant for laptops which have issues seeing the SATA drive in macOS. Its recommended to test without this first.</li>
+          <li>Big Sur+ Note: <a href="https://github.com/dortania/OpenCore-Install-Guide/blob/master/extra-files/CtlnaAHCIPort.kext.zip">CtlnaAHCIPort.kext</a> will need to be used instead due to numerous controllers being dropped from the binary itself</li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="">
+      <li>
+        <a href="https://github.com/acidanthera/RestrictEvents">RestrictEvents.kext</a>
+        <ul class="">
+          <li>Patch various functions of macOS</li>
+        </ul>
+      </li>
+    </ul>
+    <blockquote class="prompt-info">
+      <p>Chromebook users most likely need this</p>
+      <ul class="">
+        <li>
+          <a href="https://github.com/acidanthera/EmeraldSDHC">EmeraldSDHC.kext</a>
+          <ul class="">
+            <li>macOS kernel extension for eMMC support. Currently only supports eMMC/MMC cards at up to HS200 speeds. This driver is currently a work in progress and may experience poor performance or be nonfunctional on some devices. SD cards are currently not supported at this time.</li>
+          </ul>
+        </li>
+      </ul>
+    </blockquote>
+    <h4>Laptop Input</h4>
+    <h5>Keyboard</h5>
+    <blockquote class="prompt-info">
+      <p>Most laptop keyboards are PS2, you will most likely need one of these!</p>
+        <ul class="">
+          <li>
+            <a href="https://github.com/acidanthera/VoodooPS2/releases">VoodooPS2.kext</a>
+            <ul class="">
+              <li>Works with various PS2 keyboards, mice, and trackpads</li>
+              <li>Requires macOS 10.11 or newer for MT2 (Magic Trackpad 2) functions</li>
+            </ul>
+          </li>
+        </ul>
+        <ul class="">
+          <li>
+            <a href="https://bitbucket.org/RehabMan/os-x-voodoo-ps2-controller/downloads/">RehabMan's VoodooPS2.kext</a>
+            <ul class="">
+              <li>For older systems with PS2 keyboards, mice, and trackpads, or when you don't want to use VoodooInput</li>
+            </ul>
+          </li>
+        </ul>
+    </blockquote>
+    <h5>SMBus Trackpads</h5>
+    <ul class="">
+      <li>
+        <a href="https://github.com/VoodooSMBus/VoodooRMI/releases">VoodooRMI.kext</a>
+        <ul class="">
+          <li>For systems with Synaptics SMBus trackpads</li>
+          <li>Requires macOS 10.11 or newer for MT2 functions</li>
+          <li>Depends on <a>VoodooPS2.kext</a></li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="">
+      <li>
+        <a href="https://github.com/VoodooSMBus/VoodooSMBus/releases">VoodooSMBus.kext</a>
+        <ul class="">
+          <li>For systems with ELAN SMBus Trackpads</li>
+          <li>Supports macOS 10.14 or newer currently</li>
+        </ul>
+      </li>
+    </ul>
+    <h5>I2C/USB HID Devices</h5>
+    <ul class="">
+      <li>
+        <a href="https://github.com/VoodooI2C/VoodooI2C/releases">VoodooI2C.kext</a>
+        <ul class="">
+          <li>Attaches to I2C controllers to allow the included plugins to talk to I2C trackpads</li>
+          <li>USB devices using the included plugins still need VoodooI2C</li>
+          <li>Supports macOS 10.11+</li>
+          <li>Does not work on Apollo/Gemini Lake laptops</li>
+        </ul>
+      </li>
+    </ul>
+    <h5>Misc</h5>
+    <ul class="">
+      <li>
+        <a href="https://github.com/1Revenger1/ECEnabler/releases">ECEnabler.kext</a>
+        <ul class="">
+          <li>Fixes reading battery status on many devices (Allows reading EC fields over 8 bits long)</li>
+        </ul>
+      </li>
+    </ul>
+    <ul class="">
+      <li>
+        <a href="https://github.com/acidanthera/BrightnessKeys/releases">BrightnessKeys.kext</a>
+        <ul class="">
+          <li>Fixes brightness keys automatically</li>
+        </ul>
+      </li>
+    </ul>
+    <h2 id="generate-the-favicon"><span class="me-2">SSDTs</span><a href="#generate-the-favicon" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2>
+    <blockquote class="prompt-info">
+      <p>A lot of these link to dortanias guide, things to note:</p>
+      <ul class="">
+        <li>The Chromebook/Chromebox SSDTs are not required they just save power</li>
+        <li>If you can't get your DSDT via SSDTTime use SysReport from the debug build of opencore</li>
+      </ul>
+    </blockquote>
+    <h5>Desktops</h5>
+    <div class="table-wrapper"><table>
+      <thead>
+        <tr>
+          <th>Platforms</th>
+          <th><strong>CPU</strong></th>
+          <th><strong>EC</strong></th>
+          <th><strong>AWAC</strong></th>
+          <th><strong>NVRAM</strong></th>
+          <th><strong>USB</strong></th>
+          <th><strong>Chromeboxs</strong></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Penryn</td>
+          <td>N/A</td>
+          <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html" target="_blank">SSDT-EC</a></td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td><a href="https://github.com/meghan06/crossdxcdisable/blob/main/SSDT-SDXC.aml">SSDT-SDXC</a><br><a href="https://github.com/meghan06/croshdasdisable/blob/main/SSDT-HDAS-OFF.aml">SSDT-HDAS-OFF</a></td>
+        </tr>
+        <tr>
+          <td>Lynnfield and Clarkdale</td>
+          <td>N/A</td>
+          <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html" target="_blank">SSDT-EC</a></td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td><a href="https://github.com/meghan06/crossdxcdisable/blob/main/SSDT-SDXC.aml">SSDT-SDXC</a><br><a href="https://github.com/meghan06/croshdasdisable/blob/main/SSDT-HDAS-OFF.aml">SSDT-HDAS-OFF</a></td>
+        </tr>
+        <tr>
+          <td>SandyBridge</td>
+          <td><a href="https://dortania.github.io/OpenCore-Post-Install/universal/pm.html#sandy-and-ivy-bridge-power-management" target="_blank">CPU-PM</a></td>
+          <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html" target="_blank">SSDT-EC</a></td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td><a href="https://github.com/meghan06/crossdxcdisable/blob/main/SSDT-SDXC.aml">SSDT-SDXC</a><br><a href="https://github.com/meghan06/croshdasdisable/blob/main/SSDT-HDAS-OFF.aml">SSDT-HDAS-OFF</a></td>
+        </tr>
+        <tr>
+          <td>Ivy Bridge</td>
+          <td><a href="https://dortania.github.io/OpenCore-Post-Install/universal/pm.html#sandy-and-ivy-bridge-power-management" target="_blank">CPU-PM</a></td>
+          <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html" target="_blank">SSDT-EC</a></td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td><a href="https://github.com/meghan06/crossdxcdisable/blob/main/SSDT-SDXC.aml">SSDT-SDXC</a><br><a href="https://github.com/meghan06/croshdasdisable/blob/main/SSDT-HDAS-OFF.aml">SSDT-HDAS-OFF</a></td>
+        </tr>
+        <tr>
+          <td>Haswell</td>
+          <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/plug.html" target="_blank">SSDT-PLUG</a></td>
+          <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html" target="_blank">SSDT-EC</a></td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td><a href="https://github.com/meghan06/crossdxcdisable/blob/main/SSDT-SDXC.aml">SSDT-SDXC</a><br><a href="https://github.com/meghan06/croshdasdisable/blob/main/SSDT-HDAS-OFF.aml">SSDT-HDAS-OFF</a></td>
+        </tr>
+        <tr>
+          <td>Broadwell</td>
+          <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/plug.html" target="_blank">SSDT-PLUG</a></td>
+          <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html" target="_blank">SSDT-EC</a></td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td><a href="https://github.com/meghan06/crossdxcdisable/blob/main/SSDT-SDXC.aml">SSDT-SDXC</a><br><a href="https://github.com/meghan06/croshdasdisable/blob/main/SSDT-HDAS-OFF.aml">SSDT-HDAS-OFF</a></td>
+        </tr>
+        <tr>
+          <td>Skylake/Apollo Lake</td>
+          <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/plug.html" target="_blank">SSDT-PLUG</a></td>
+          <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html" target="_blank">SSDT-EC-USBX</a></td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td><a href="https://github.com/meghan06/crossdxcdisable/blob/main/SSDT-SDXC.aml">SSDT-SDXC</a><br><a href="https://github.com/meghan06/croshdasdisable/blob/main/SSDT-HDAS-OFF.aml">SSDT-HDAS-OFF</a></td>
+        </tr>
+        <tr>
+          <td>Kaby/Gemini Lake</td>
+          <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/plug.html" target="_blank">SSDT-PLUG</a></td>
+          <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html" target="_blank">SSDT-EC-USBX</a></td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td>N/A</td>
+          <td><a href="https://github.com/meghan06/crossdxcdisable/blob/main/SSDT-SDXC.aml">SSDT-SDXC</a><br><a href="https://github.com/meghan06/croshdasdisable/blob/main/SSDT-HDAS-OFF.aml">SSDT-HDAS-OFF</a></td>
+        </tr>
+        <tr>
+          <td>Coffee Lake</td>
+          <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/plug.html" target="_blank">SSDT-PLUG</a></td>
+          <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html" target="_blank">SSDT-EC-USBX</a></td>
+          <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/awac.html" target="_blank">SSDT-AWAC</a></td>
+          <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/nvram.html" target="_blank">SSDT-PMC</a></td>
+          <td>N/A</td>
+          <td><a href="https://github.com/meghan06/crossdxcdisable/blob/main/SSDT-SDXC.aml">SSDT-SDXC</a><br><a href="https://github.com/meghan06/croshdasdisable/blob/main/SSDT-HDAS-OFF.aml">SSDT-HDAS-OFF</a></td>
+        </tr>
+        <tr>
+          <td>Comet Lake</td>
+          <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/plug.html" target="_blank">SSDT-PLUG</a></td>
+          <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html" target="_blank">SSDT-EC-USBX</a></td>
+          <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/awac.html" target="_blank">SSDT-AWAC</a></td>
+          <td>N/A</td>
+          <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/rhub.html" target="_blank">SSDT-RHUB</a></td>
+          <td><a href="https://github.com/meghan06/crossdxcdisable/blob/main/SSDT-SDXC.aml">SSDT-SDXC</a><br><a href="https://github.com/meghan06/croshdasdisable/blob/main/SSDT-HDAS-OFF.aml">SSDT-HDAS-OFF</a></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <h5>Laptops</h5>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Platforms</th>
+            <th><strong>CPU</strong></th>
+            <th><strong>EC</strong></th>
+            <th><strong>Backlight</strong></th>
+            <th><strong>I2C Trackpad</strong></th>
+            <th><strong>AWAC</strong></th>
+            <th><strong>USB</strong></th>
+            <th><strong>IRQ</strong></th>
+            <th><strong>Chromebooks</strong></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Clarksfield and Arrandale</td>
+            <td>N/A</td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html" target="_blank">SSDT-EC</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Laptops/backlight.html" target="_blank">SSDT-PNLF</a></td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/irq.html" target="_blank">IRQ SSDT</a></td>
+            <td><a href="https://github.com/meghan06/crossdxcdisable/blob/main/SSDT-SDXC.aml">SSDT-SDXC</a><br><a href="https://github.com/meghan06/croshdasdisable/blob/main/SSDT-HDAS-OFF.aml">SSDT-HDAS-OFF</a></td>
+          </tr>
+          <tr>
+            <td>SandyBridge</td>
+            <td><a href="https://dortania.github.io/OpenCore-Post-Install/universal/pm.html#sandy-and-ivy-bridge-power-management" target="_blank">CPU-PM</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html" target="_blank">SSDT-EC</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Laptops/backlight.html" target="_blank">SSDT-PNLF</a></td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/irq.html" target="_blank">IRQ SSDT</a></td>
+            <td><a href="https://github.com/meghan06/crossdxcdisable/blob/main/SSDT-SDXC.aml">SSDT-SDXC</a><br><a href="https://github.com/meghan06/croshdasdisable/blob/main/SSDT-HDAS-OFF.aml">SSDT-HDAS-OFF</a></td>
+          </tr>
+          <tr>
+            <td>Ivy Bridge</td>
+            <td><a href="https://dortania.github.io/OpenCore-Post-Install/universal/pm.html#sandy-and-ivy-bridge-power-management" target="_blank">CPU-PM</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html" target="_blank">SSDT-EC</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Laptops/backlight.html" target="_blank">SSDT-PNLF</a></td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/irq.html" target="_blank">IRQ SSDT</a></td>
+            <td><a href="https://github.com/meghan06/crossdxcdisable/blob/main/SSDT-SDXC.aml">SSDT-SDXC</a><br><a href="https://github.com/meghan06/croshdasdisable/blob/main/SSDT-HDAS-OFF.aml">SSDT-HDAS-OFF</a></td>
+          </tr>
+          <tr>
+            <td>Haswell</td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/plug.html" target="_blank">SSDT-PLUG</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html" target="_blank">SSDT-EC</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Laptops/backlight.html" target="_blank">SSDT-PNLF</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Laptops/trackpad.html" target="_blank">SSDT-GPI0</a></td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/irq.html" target="_blank">IRQ SSDT</a></td>
+            <td><a href="https://github.com/meghan06/crossdxcdisable/blob/main/SSDT-SDXC.aml">SSDT-SDXC</a><br><a href="https://github.com/meghan06/croshdasdisable/blob/main/SSDT-HDAS-OFF.aml">SSDT-HDAS-OFF</a></td>
+          </tr>
+          <tr>
+            <td>Broadwell</td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/plug.html" target="_blank">SSDT-PLUG</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html" target="_blank">SSDT-EC</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Laptops/backlight.html" target="_blank">SSDT-PNLF</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Laptops/trackpad.html" target="_blank">SSDT-GPI0</a></td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/irq.html" target="_blank">IRQ SSDT</a></td>
+            <td><a href="https://github.com/meghan06/crossdxcdisable/blob/main/SSDT-SDXC.aml">SSDT-SDXC</a><br><a href="https://github.com/meghan06/croshdasdisable/blob/main/SSDT-HDAS-OFF.aml">SSDT-HDAS-OFF</a></td>
+          </tr>
+          <tr>
+            <td>Skylake/Apollo Lake</td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/plug.html" target="_blank">SSDT-PLUG</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html" target="_blank">SSDT-EC-USBX</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Laptops/backlight.html" target="_blank">SSDT-PNLF</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Laptops/trackpad.html" target="_blank">SSDT-GPI0</a></td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td><a href="https://github.com/meghan06/crossdxcdisable/blob/main/SSDT-SDXC.aml">SSDT-SDXC</a><br><a href="https://github.com/meghan06/croshdasdisable/blob/main/SSDT-HDAS-OFF.aml">SSDT-HDAS-OFF</a></td>
+          </tr>
+          <tr>
+            <td>Kaby/Gemini Lake</td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/plug.html" target="_blank">SSDT-PLUG</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html" target="_blank">SSDT-EC-USBX</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Laptops/backlight.html" target="_blank">SSDT-PNLF</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Laptops/trackpad.html" target="_blank">SSDT-GPI0</a></td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td><a href="https://github.com/meghan06/crossdxcdisable/blob/main/SSDT-SDXC.aml">SSDT-SDXC</a><br><a href="https://github.com/meghan06/croshdasdisable/blob/main/SSDT-HDAS-OFF.aml">SSDT-HDAS-OFF</a></td>
+          </tr>
+          <tr>
+            <td>Coffee/Whiskey Lake</td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/plug.html" target="_blank">SSDT-PLUG</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html" target="_blank">SSDT-EC-USBX</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Laptops/backlight.html" target="_blank">SSDT-PNLF</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Laptops/trackpad.html" target="_blank">SSDT-GPI0</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/awac.html" target="_blank">SSDT-AWAC</a></td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td><a href="https://github.com/meghan06/crossdxcdisable/blob/main/SSDT-SDXC.aml">SSDT-SDXC</a><br><a href="https://github.com/meghan06/croshdasdisable/blob/main/SSDT-HDAS-OFF.aml">SSDT-HDAS-OFF</a></td>
+          </tr>
+          <tr>
+            <td>Coffee Lake (9th Gen)</td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/plug.html" target="_blank">SSDT-PLUG</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html" target="_blank">SSDT-EC-USBX</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Laptops/backlight.html" target="_blank">SSDT-PNLF</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Laptops/trackpad.html" target="_blank">SSDT-GPI0</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/awac.html" target="_blank">SSDT-AWAC</a></td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td><a href="https://github.com/meghan06/crossdxcdisable/blob/main/SSDT-SDXC.aml">SSDT-SDXC</a><br><a href="https://github.com/meghan06/croshdasdisable/blob/main/SSDT-HDAS-OFF.aml">SSDT-HDAS-OFF</a></td>
+          </tr>
+          <tr>
+            <td>Comet Lake</td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/plug.html" target="_blank">SSDT-PLUG</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html" target="_blank">SSDT-EC-USBX</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Laptops/backlight.html" target="_blank">SSDT-PNLF</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Laptops/trackpad.html" target="_blank">SSDT-GPI0</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/awac.html" target="_blank">SSDT-AWAC</a></td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td><a href="https://github.com/meghan06/crossdxcdisable/blob/main/SSDT-SDXC.aml">SSDT-SDXC</a><br><a href="https://github.com/meghan06/croshdasdisable/blob/main/SSDT-HDAS-OFF.aml">SSDT-HDAS-OFF</a></td>
+          </tr>
+          <tr>
+            <td>Ice Lake</td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/plug.html" target="_blank">SSDT-PLUG</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html" target="_blank">SSDT-EC-USBX</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Laptops/backlight.html" target="_blank">SSDT-PNLF</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Laptops/trackpad.html" target="_blank">SSDT-GPI0</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/awac.html" target="_blank">SSDT-AWAC</a></td>
+            <td><a href="https://dortania.github.io/Getting-Started-With-ACPI/Universal/rhub.html" target="_blank">SSDT-RHUB</a></td>
+            <td>N/A</td>
+            <td><a href="https://github.com/meghan06/crossdxcdisable/blob/main/SSDT-SDXC.aml">SSDT-SDXC</a><br><a href="https://github.com/meghan06/croshdasdisable/blob/main/SSDT-HDAS-OFF.aml">SSDT-HDAS-OFF</a></td>
+          </tr>
+        </tbody>
+      </table>      
+    </div>
+    <p>And that should be all, continue to <a href="/parts/config-setup/">Setting up config.plist</a></p>
+  </div>
+
+  <div class="post-tail-wrapper text-muted">
+    <!-- categories -->
+    
+      <div class="post-meta mb-3">
+        <i class="far fa-folder-open fa-fw me-1"></i>
+        
+          <a href="/tags/important/">Important</a>,
+          <a href="/tags/resources/">Resources</a>
+      </div>
+    
+
+    <!-- tags -->
+    
+      <div class="post-tags">
+        <i class="fa fa-tags fa-fw me-1"></i>
+        
+          <a
+            href="/tags/resources/"
+            class="post-tag no-text-decoration"
+          >Resources</a>
+        
+      </div>
+    
+
+    <div
+      class="
+        post-tail-bottom
+        d-flex justify-content-between align-items-center mt-5 pb-2
+      "
+    >
+      <div class="license-wrapper">
+        
+          
+
+          This post is licensed under 
+        <a href="https://creativecommons.org/licenses/by/4.0/">
+          CC BY 4.0
+        </a>
+         by the author.
+        
+      </div>
+
+      <!-- Post sharing snippet -->
+
+<div class="share-wrapper d-flex align-items-center">
+  <span class="share-label text-muted me-1">Share</span>
+  <span class="share-icons">
+    
+    
+    
+
+    
+      
+      <a
+        href="https://twitter.com/intent/tweet?text=Gathering%20Files%20-%20Celeron%20Hackintosh%20Guide&url=http%3A%2F%2Flrdsnow.github.io%2FCeleron-Hackintosh-Guide%2Fparts%2Fgathering-files%2F"
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        title="Twitter"
+        target="_blank"
+        rel="noopener"
+        aria-label="Twitter"
+      >
+        <i class="fa-fw fa-brands fa-square-x-twitter"></i>
+      </a>
+    
+      
+      <a
+        href="https://www.facebook.com/sharer/sharer.php?title=Gathering%20Files%20-%20Celeron%20Hackintosh%20Guide&u=http%3A%2F%2Flrdsnow.github.io%2FCeleron-Hackintosh-Guide%2Fparts%2Fgathering-files%2F"
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        title="Facebook"
+        target="_blank"
+        rel="noopener"
+        aria-label="Facebook"
+      >
+        <i class="fa-fw fab fa-facebook-square"></i>
+      </a>
+    
+      
+      <a
+        href="https://t.me/share/url?url=http%3A%2F%2Flrdsnow.github.io%2FCeleron-Hackintosh-Guide%2Fparts%2Fgathering-files%2F&text=Gathering%20Files%20-%20Celeron%20Hackintosh%20Guide"
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        title="Telegram"
+        target="_blank"
+        rel="noopener"
+        aria-label="Telegram"
+      >
+        <i class="fa-fw fab fa-telegram"></i>
+      </a>
+    
+
+    <button
+      id="copy-link"
+      aria-label="Copy link"
+      class="btn small"
+      data-bs-toggle="tooltip"
+      data-bs-placement="top"
+      title="Copy link"
+      data-title-succeed="Link copied successfully!"
+    >
+      <i class="fa-fw fas fa-link pe-none"></i>
+    </button>
+  </span>
+</div>
+
+    </div>
+    <!-- .post-tail-bottom -->
+  </div>
+  <!-- div.post-tail-wrapper -->
+</article>
+          </main>
+          <aside aria-label="Panel" id="panel-wrapper" class="col-xl-3 ps-2 mb-5 text-muted">
+            <div class="access">
+              <section>
+                <h2 class="panel-heading">Tags</h2>
+                <div class="d-flex flex-wrap mt-3 mb-1 me-3">
+                  
+                    
+                    <a class="post-tag btn btn-outline-primary" href="/tags/start-here/">Start Here</a>
+                  
+                    
+                    <a class="post-tag btn btn-outline-primary" href="/tags/resources/">Resources</a>
+                  
+                    
+                    <a class="post-tag btn btn-outline-primary" href="/tags/tutorial/">Tutorial</a>
+                  
+                    
+                    <a class="post-tag btn btn-outline-primary" href="/tags/help/">Help</a>
+                  
+                </div>
+              </section>
+
+
+            </div>
+
+            
+              
+              
+
+
+
+  <section id="toc-wrapper" class="ps-0 pe-4">
+    <h2 class="panel-heading ps-3 pt-2 mb-2">Contents</h2>
+    <nav id="toc"></nav>
+  </section>
+
+
+            
+          </aside>
+        </div>
+
+        <div class="row">
+          <!-- tail -->
+          <div id="tail-wrapper" class="col-12 col-lg-11 col-xl-9 px-md-4">  
+              <!-- Navigation buttons at the bottom of the post. -->
+
+<nav class="post-navigation d-flex justify-content-between" aria-label="Post Navigation">
+  
+  
+
+  
+    <a
+      href="/parts/getting-started/"
+      class="btn btn-outline-primary"
+      aria-label="Previous"
+    >
+      <p>Getting Started</p>
+    </a>
+  
+    <a
+      href="/parts/config-setup/"
+      class="btn btn-outline-primary"
+      aria-label="Next"
+    >
+      <p>Setting up config.plist</p>
+    </a>
+  
+</nav>
+
+            
+              
+              <!--  The comments switcher -->
+
+
+            
+
+            <!-- The Footer -->
+
+<footer
+  aria-label="Site Info"
+  class="
+    d-flex flex-column justify-content-center text-muted
+    flex-lg-row justify-content-lg-between align-items-lg-center pb-lg-3
+  "
+>
+  <p>
+    ©
+    <time>2023</time>
+    <a href="https://twitter.com/username">Lrdsnow</a>.
+    
+      <span
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author."
+      >Some rights reserved.</span>
+    
+  </p>
+
+  <p>Using the <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a> theme for <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a>
+  </p>
+</footer>
+
+          </div>
+        </div>
+
+        <!-- The Search results -->
+
+<div id="search-result-wrapper" class="d-flex justify-content-center unloaded">
+  <div class="col-11 content">
+    <div id="search-hints">
+      <section>
+        <h2 class="panel-heading">Tags</h2>
+        <div class="d-flex flex-wrap mt-3 mb-1 me-3">
+          
+            
+            <a class="post-tag btn btn-outline-primary" href="/tags/start-here/">Start Here</a>
+          
+            
+            <a class="post-tag btn btn-outline-primary" href="/tags/resources/">Resources</a>
+          
+            
+            <a class="post-tag btn btn-outline-primary" href="/tags/tutorial/">Tutorial</a>
+          
+            
+            <a class="post-tag btn btn-outline-primary" href="/tags/help/">Help</a>
+          
+        </div>
+      </section>
+
+
+    </div>
+    <div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div>
+  </div>
+</div>
+
+      </div>
+
+      <aside aria-label="Scroll to Top">
+        <button id="back-to-top" type="button" class="btn btn-lg btn-box-shadow">
+          <i class="fas fa-angle-up"></i>
+        </button>
+      </aside>
+    </div>
+
+    <div id="mask"></div>
+
+    
+      <aside
+  id="notification"
+  class="toast"
+  role="alert"
+  aria-live="assertive"
+  aria-atomic="true"
+  data-bs-animation="true"
+  data-bs-autohide="false"
+>
+  <div class="toast-header">
+    <button
+      type="button"
+      class="btn-close ms-auto"
+      data-bs-dismiss="toast"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="toast-body text-center pt-0">
+    <p class="px-2 mb-3">A new version of content is available.</p>
+    <button type="button" class="btn btn-primary" aria-label="Update">
+      Update
+    </button>
+  </div>
+</aside>
+  <script src="https://cdn.jsdelivr.net/combine/npm/jquery@3.7.1/dist/jquery.min.js,npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js,npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js,npm/loading-attribute-polyfill@2.1.1/dist/loading-attribute-polyfill.umd.min.js,npm/magnific-popup@1.1.0/dist/jquery.magnific-popup.min.js,npm/clipboard@2.0.11/dist/clipboard.min.js,npm/dayjs@1.11.10/dayjs.min.js,npm/dayjs@1.11.10/locale/en.min.js,npm/dayjs@1.11.10/plugin/relativeTime.min.js,npm/dayjs@1.11.10/plugin/localizedFormat.min.js,npm/tocbot@4.21.2/dist/tocbot.min.js"></script>
+<script>
+  /* Note: dependent library will be loaded in `js-selector.html` */
+  SimpleJekyllSearch({
+    searchInput: document.getElementById('search-input'),
+    resultsContainer: document.getElementById('search-results'),
+    json: '/assets/js/data/search.json',
+    searchResultTemplate: '  <article class="px-1 px-sm-2 px-lg-4 px-xl-0">    <header>      <h2><a href="{url}">{title}</a></h2>      <div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1">        {categories}        {tags}      </div>    </header>    <p>{snippet}</p>  </article>',
+    noResultsText: '<p class="mt-5"></p>',
+    templateMiddleware: function(prop, value, template) {
+      if (prop === 'categories') {
+        if (value === '') {
+          return `${value}`;
+        } else {
+          return `<div class="me-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`;
+        }
+      }
+
+      if (prop === 'tags') {
+        if (value === '') {
+          return `${value}`;
+        } else {
+          return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`;
+        }
+      }
+    }
+  });
+</script>
+</body>
+</html>
